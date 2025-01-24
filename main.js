@@ -38,7 +38,7 @@ class MainScene extends Phaser.Scene {
 
         var colors = [ 0xef658c, 0xff9a52, 0xffdf00, 0x31ef8c, 0x21dfff, 0x31aade, 0x5275de, 0x9c55ad, 0xbd208c ];
 
-        for (let i = 0; i < 105; i++) {
+        for (let i = 0; i < 15; i++) {
             
 
             var x = Phaser.Math.Between(50, 750);
@@ -52,10 +52,10 @@ class MainScene extends Phaser.Scene {
                 targets: bubble,
                 x: bubble.x + Phaser.Math.Between(-150, 150),
                 y: bubble.y + Phaser.Math.Between(-150, 150),
-                duration: Phaser.Math.Between(2000, 4000),
+                duration: Phaser.Math.Between(500, 4000),
                 yoyo: true,
                 repeat: -1,
-                ease: 'Sine.easeInOut'
+                ease: 'linear'
             });
 
 
@@ -66,7 +66,7 @@ class MainScene extends Phaser.Scene {
         }
 
         this.score = 0;
-        this.scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });
+        this.scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#fff' });
     }
 
     update() {
@@ -79,9 +79,15 @@ class MainScene extends Phaser.Scene {
 
 
     burstBubble(bubble) {
-        console.log(bubble); // Log the bubble object to debug
+        //console.log(bubble);
         bubble.body.enable = false; // Disable the physics body
         bubble.setVisible(false); // Hide the bubble
+        
+        //TODO add a burst explotion of sub bubble sprites
+        
+
+        //TODO add a sound effect
+
         this.score += 1;
         this.scoreText.setText('Score: ' + this.score);
     }
@@ -109,9 +115,16 @@ class GameOverScene extends Phaser.Scene {
     }
 
     create() {
-        this.add.text(300, 300, 'You Win!', { fontSize: '64px', fill: '#000' });
-        this.input.on('pointerdown', () => {
+
+        this.add.text(300, 300, 'You Win!', { fontSize: '64px', fill: '#fff' });
+        this.add.text(300, 400, 'Score: ' + this.scene.get('MainScene').score, { fontSize: '32px', fill: '#fff' });
+
+        
+
+        this.time.delayedCall(10000, () => {
+            this.input.on('pointerdown', () => {
             this.scene.start('StartScene');
+            });
         });
     }
 }
