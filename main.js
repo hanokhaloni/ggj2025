@@ -25,17 +25,22 @@ class MainScene extends Phaser.Scene {
     }
 
     create() {
-        this.bubbles = this.physics.add.group({
-            key: 'bubble',
-            repeat: 4,
-            setXY: { x: 100, y: 100, stepX: 150 },
-            setScale: { x: 0.5, y: 0.5 }
-        });
 
-        this.bubbles.children.iterate((bubble) => {
+        var colors = [ 0xef658c, 0xff9a52, 0xffdf00, 0x31ef8c, 0x21dfff, 0x31aade, 0x5275de, 0x9c55ad, 0xbd208c ];
+
+        for (let i = 0; i < 105; i++) {
+            
+
+            var x = Phaser.Math.Between(50, 750);
+            var y = Phaser.Math.Between(100, 550);
+
+            const bubble = this.physics.add.image(x, y, 'bubble').setScale(Phaser.Math.FloatBetween(0.05, 0.15));
+
+            bubble.setTint(Phaser.Utils.Array.GetRandom(colors));
+
             bubble.setInteractive();
-            bubble.on('pointerdown', () => { this.burstBubble(bubble);});
-        });
+            bubble.on('pointerdown', () => { this.burstBubble(bubble); });
+        }
 
         this.score = 0;
         this.scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#000' });
