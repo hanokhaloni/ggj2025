@@ -163,6 +163,74 @@ void main() {
 }
 `;
 
+const fragmentShader3 = `
+#ifdef GL_ES
+precision mediump float;
+#endif
+
+// glslsandbox uniforms
+uniform float time;
+uniform vec2 resolution;
+
+varying vec2 fragCoord;
+
+// shadertoy globals
+#define iTime time
+#define iResolution resolution
+
+// --------[ Original ShaderToy begins here ]---------- //
+#define PI 3.1415926535897932384626433832795
+
+vec4 hsv_to_rgb(float h, float s, float v, float a)
+{
+    float c = v * s;
+    h = mod((h * 6.0), 6.0);
+    float x = c * (1.0 - abs(mod(h, 2.0) - 1.0));
+    vec4 color;
+
+    if (0.0 <= h && h < 1.0) {
+        color = vec4(c, x, 0.0, a);
+    } else if (1.0 <= h && h < 2.0) {
+        color = vec4(x, c, 0.0, a);
+    } else if (2.0 <= h && h < 3.0) {
+        color = vec4(0.0, c, x, a);
+    } else if (3.0 <= h && h < 4.0) {
+        color = vec4(0.0, x, c, a);
+    } else if (4.0 <= h && h < 5.0) {
+        color = vec4(x, 0.0, c, a);
+    } else if (5.0 <= h && h < 6.0) {
+        color = vec4(c, 0.0, x, a);
+    } else {
+        color = vec4(0.0, 0.0, 0.0, a);
+    }
+
+    color.rgb += v - c;
+
+    return color;
+}
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{
+    float x = fragCoord.x - (iResolution.x / 2.0);
+    float y = fragCoord.y - (iResolution.y );
+
+    float r = length(vec2(x,y));
+    float angle = atan(x,y) - sin(iTime)*r / 200.0 + 1.0*iTime;
+    float intensity = 0.5 + 0.25*sin(15.0*angle);
+    //float intensity = mod(angle, (PI / 8.0));
+    //float intensity = 0.5 + 0.25*sin(angle*16.0-5.0*iTime);
+
+    fragColor = hsv_to_rgb(angle/PI, intensity, 1.0, 0.5);
+}
+// --------[ Original ShaderToy ends here ]---------- //
+
+void main(void)
+{
+    mainImage(gl_FragColor, fragCoord.xy);
+    gl_FragColor.a = 1.0;
+}
+`;
+
 
 
 class StartScene extends Phaser.Scene {
@@ -322,15 +390,40 @@ class GameOverScene extends Phaser.Scene {
   }
 
   create() {
-    
-    this.add.text(15, 200, "Guess what?", { fontSize: "64px", fill: "#fff" });
-    this.add.text(10, 300, "Everyone wins!", { fontSize: "64px", fill: "#fff" });
-    this.add.text(20, 400, "But your score is: " + this.scene.get("MainScene").score, {
-      fontSize: "32px",
-      fill: "#fff",
+    const baseShader = new Phaser.Display.BaseShader('BufferShader1', fragmentShader3);
+    const shader = this.add.shader(baseShader, 400, 300, 800, 600);
+
+    //const buttonGraphics = this.add.graphics();
+    this.time.addEvent({
+      delay: 500,
+      callback: () => {
+        const x = Phaser.Math.Between(0, 800);
+        const bubble = this.physics.add.image(x, 0, "bubble").setScale(Phaser.Math.FloatBetween(0.05, 0.15));
+        bubble.setVelocity(0, 200);
+      },
+      callbackScope: this,
+      loop: true
     });
 
-    this.time.delayedCall(10000, () => {
+    this.add.text(15, 200, "Guess what?", { fontSize: "64px", fill: "#000" });
+    this.add.text(100, 300, "Everyone wins!", { fontSize: "64px", fill: "#000" });
+    this.add.text(200, 400, "But your score is: " + this.scene.get("MainScene").score, {
+      fontSize: "32px",
+      fill: "#000",
+    });
+    //create
+    const shareButton = this.add.text(400, 500, "Share to Facebook", { fontSize: "32px", fill: "#000" })
+        .setOrigin(0.5)
+        .setInteractive();
+
+    shareButton.on('pointerdown', () => {
+        const url = "https://yourgameurl.com";
+        const imageUrl = this.game.renderer.snapshotCanvas.toDataURL();
+        const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&picture=${encodeURIComponent(imageUrl)}`;
+        window.open(facebookShareUrl, '_blank');
+    });
+
+    this.time.delayedCall(500, () => {
       this.input.on("pointerdown", () => {
         this.scene.start("StartScene");
       });
