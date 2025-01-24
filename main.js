@@ -4,111 +4,162 @@ const fragmentShader1 = `
 precision mediump float;
 #endif
 
-// Love u Hanna E
-
-uniform float time;
-uniform vec2 mouse;
 uniform vec2 resolution;
+uniform vec2 mouse;
+uniform float time;
 
-float snoise(vec3 uv, float res) {
-    const vec3 s = vec3(1e0, 1e2, 1e3);
+float random (in vec2 _st) {
+    return fract(sin(dot(_st.xy,
+                         vec2(12.9898,78.233)))*
+        43758.5453123);
+}
 
-    uv *= res;
+// Based on Morgan McGuire @morgan3d
+// https://www.shadertoy.com/view/4dS3Wd
+float noise (in vec2 _st) {
+    vec2 i = floor(_st);
+    vec2 f = fract(_st);
 
-    vec3 uv0 = floor(mod(uv, res)) * s;
-    vec3 uv1 = floor(mod(uv + vec3(1.0), res)) * s;
+    // Four corners in 2D of a tile
+    float a = random(i);
+    float b = random(i + vec2(1.0, 0.0));
+    float c = random(i + vec2(0.0, 1.0));
+    float d = random(i + vec2(1.0, 1.0));
 
-    vec3 f = smoothstep(0.0, 1.0, fract(uv));
+    vec2 u = f * f * (3.0 - 2.0 * f);
 
-    vec4 v = vec4(uv0.x + uv0.y + uv0.z,
-              uv1.x + uv0.y + uv0.z,
-              uv0.x + uv1.y + uv0.z,
-              uv1.x + uv1.y + uv0.z);
+    return mix(a, b, u.x) +
+            (c - a)* u.y * (1.0 - u.x) +
+            (d - b) * u.x * u.y;
+}
 
-    vec4 r = fract(sin(v * 1e-1) * 1e3);
-    float r0 = mix(mix(r.x, r.y, f.x), mix(r.z, r.w, f.x), f.y);
+#define NUM_OCTAVES 5
 
-    r = fract(sin((v + uv1.z - uv0.z) * 1e-1) * 1e3);
-    float r1 = mix(mix(r.x, r.y, f.x), mix(r.z, r.w, f.x), f.y);
-
-    return mix(r0, r1, f.z) * 2.0 - 1.0;
+float fbm ( in vec2 _st) {
+    float v = 0.0;
+    float a = 0.5;
+    vec2 shift = vec2(100.0);
+    // Rotate to reduce axial bias
+    mat2 rot = mat2(cos(0.5), sin(0.5),
+                    -sin(0.5), cos(0.50));
+    for (int i = 0; i < NUM_OCTAVES; ++i) {
+        v += a * noise(_st);
+        _st = rot * _st * 2.0 + shift;
+        a *= 0.5;
+    }
+    return v;
 }
 
 void main() {
-    vec2 p = -0.5 + gl_FragCoord.xy / resolution.xy;
-    p.x *= resolution.x / resolution.y;
-    float lp = .02/length(p);
-    float ap = atan(p.x, p.y);
+    vec2 st = gl_FragCoord.xy/resolution.xy*3.;
+    // st += st * abs(sin(time*0.1)*3.0);
+    vec3 color = vec3(0.0);
 
-    float time = time*.04-pow(time, .8)*(1. + .1*cos(time*0.04))*2.;
+    vec2 q = vec2(0.);
+    q.x = fbm( st + 0.00*time);
+    q.y = fbm( st + vec2(1.0));
 
-    float r1 = 0.2;
-    if(lp <= r1){
-        ap -= time*0.1+lp*9.;
-        lp = sqrt(1.-lp/r1)*0.5;
-    }else{
-        ap += time*0.1+lp*2.;
-        lp -= r1;
-    }
+    vec2 r = vec2(0.);
+    r.x = fbm( st + 1.0*q + vec2(1.7,9.2)+ 0.15*time );
+    r.y = fbm( st + 1.0*q + vec2(8.3,2.8)+ 0.126*time);
 
-    lp = pow(lp*lp, 1./3.);
+    float f = fbm(st+r);
 
-    p = lp*vec2(sin(ap), cos(ap));
+    color = mix(vec3(0.101961,0.333333,0.444444),
+                 vec3(0.222222,0.33333,0.498039),
+                 clamp((f*f)*4.0,0.0,1.0));
 
-    float color = 5.0 - (6.0 * lp);
+    color = mix(color,
+                vec3(0,0,0.164706),
+                clamp(length(q),0.0,1.0));
 
-    vec3 coord = vec3(atan(p.x, p.y) / 6.2832 + 0.5, 0.4 * lp, 0.5);
+     color = mix(color,
+                 vec3(0.666667,1,1),
+                 clamp(length(r.x),0.0,1.0));
 
-    float power = 2.0;
-    for (int i = 0; i < 6; i++) {
-        power *= 2.0;
-        color += (1.5 / power) * snoise(coord + vec3(0.0, -0.05 * time*2.0, 0.01 * time*2.0), 16.0 * power);
-    }
-    color = max(color, 0.0);
-    float c2 = color * color;
-    float c3 = color * c2;
-    vec3 fc = vec3(color * 0.34, c2*0.15, c3*0.85);
-    float f = fract(time);
-    //fc *= smoothstep(f-0.1, f, length(p)) - smoothstep(f, f+0.1, length(p));
-    gl_FragColor = vec4(length(fc)*vec3(1,02,0)*0.04, 1.0);
+    gl_FragColor = vec4((f*f*f+.6*f*f+.5*f)*color,1.0);
 }
 `;
 
 const fragmentShader2 = `
-precision highp float;   /// iOS needs high?
+#ifdef GL_ES
+precision mediump float;
+#endif
 
-uniform float time;
 uniform vec2 resolution;
+uniform vec2 mouse;
+uniform float time;
 
-varying vec2 fragCoord;
+float random (in vec2 _st) {
+    return fract(sin(dot(_st.xy,
+                         vec2(12.9898,78.233)))*
+        43758.5453123);
+}
 
-// "[SH17A] Fireworks" by Martijn Steinrucken aka BigWings/Countfrolic - 2017
-// License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
-// Based on https://www.shadertoy.com/view/lscGRl
+// Based on Morgan McGuire @morgan3d
+// https://www.shadertoy.com/view/4dS3Wd
+float noise (in vec2 _st) {
+    vec2 i = floor(_st);
+    vec2 f = fract(_st);
 
-#define N(h) fract(sin(vec4(6,9,1,0)*h) * 9e2)
+    // Four corners in 2D of a tile
+    float a = random(i);
+    float b = random(i + vec2(1.0, 0.0));
+    float c = random(i + vec2(0.0, 1.0));
+    float d = random(i + vec2(1.0, 1.0));
 
-void main(void)
-{
-  vec4 o;
-  vec2 u = fragCoord.xy/resolution.y;
+    vec2 u = f * f * (3.0 - 2.0 * f);
 
-// proper pixelate
-float s = 500.;
-    u = floor(u * s) / s;
+    return mix(a, b, u.x) +
+            (c - a)* u.y * (1.0 - u.x) +
+            (d - b) * u.x * u.y;
+}
 
-  float e, d, i=0.;
-  vec4 p;
+#define NUM_OCTAVES 5
 
-  for(float i=1.; i<30.; i++) {
-    d = floor(e = i*9.1+time);
-    p = N(d)+.3;
-    e -= d;
-    for(float d=0.; d<5.;d++)
-      o += p*(2.9-e)/1e3/length(u-(p-e*(N(d*i)-.5)).xy);
-  }
+float fbm ( in vec2 _st) {
+    float v = 0.0;
+    float a = 0.5;
+    vec2 shift = vec2(100.0);
+    // Rotate to reduce axial bias
+    mat2 rot = mat2(cos(0.5), sin(0.5),
+                    -sin(0.5), cos(0.50));
+    for (int i = 0; i < NUM_OCTAVES; ++i) {
+        v += a * noise(_st);
+        _st = rot * _st * 2.0 + shift;
+        a *= 0.5;
+    }
+    return v;
+}
 
-  gl_FragColor = vec4(o.rgb, 1.0);
+void main() {
+    vec2 st = gl_FragCoord.xy/resolution.xy*3.;
+    // st += st * abs(sin(time*0.1)*3.0);
+    vec3 color = vec3(0.0);
+
+    vec2 q = vec2(0.);
+    q.x = fbm( st + 0.00*time);
+    q.y = fbm( st + vec2(1.0));
+
+    vec2 r = vec2(0.);
+    r.x = fbm( st + 1.0*q + vec2(1.7,9.2)+ 0.15*time );
+    r.y = fbm( st + 1.0*q + vec2(8.3,2.8)+ 0.126*time);
+
+    float f = fbm(st+r);
+
+    // color = mix(vec3(0.101961,0.333333,0.444444),
+    //             vec3(0.222222,0.33333,0.498039),
+    //             clamp((f*f)*4.0,0.0,1.0));
+
+    color = mix(vec3(1,1,1),
+                vec3(0,0,0.164706),
+                clamp(length(q),0.0,1.0));
+
+    // color = mix(color,
+    //             vec3(0.666667,1,1),
+    //             clamp(length(r.x),0.0,1.0));
+
+    gl_FragColor = vec4((f*f*f+.6*f*f+.5*f)*color,1.0);
 }
 `;
 
