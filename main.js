@@ -18,6 +18,9 @@ class StartScene extends Phaser.Scene {
 class MainScene extends Phaser.Scene {
     constructor() {
         super({ key: 'MainScene' });
+        this.timer = 5000; // 10 seconds
+        this.timerEvent = null;
+        this.graphics = null;
     }
 
     preload() {
@@ -25,6 +28,13 @@ class MainScene extends Phaser.Scene {
     }
 
     create() {
+
+        this.graphics = this.add.graphics({ lineStyle: { width: 4, color: 0xffffff } });
+        this.timerEvent = this.time.addEvent({
+            delay: this.timer,
+            callback: this.onTimerEnd,
+            callbackScope: this
+        });
 
         var colors = [ 0xef658c, 0xff9a52, 0xffdf00, 0x31ef8c, 0x21dfff, 0x31aade, 0x5275de, 0x9c55ad, 0xbd208c ];
 
@@ -38,6 +48,19 @@ class MainScene extends Phaser.Scene {
 
             bubble.setTint(Phaser.Utils.Array.GetRandom(colors));
 
+            this.tweens.add({
+                targets: bubble,
+                x: bubble.x + Phaser.Math.Between(-150, 150),
+                y: bubble.y + Phaser.Math.Between(-150, 150),
+                duration: Phaser.Math.Between(2000, 4000),
+                yoyo: true,
+                repeat: -1,
+                ease: 'Sine.easeInOut'
+            });
+
+
+            //this.tweens.add({ targets: bubble, scaleX: 1.2, scaleY: 1.2, duration: 2000, yoyo: true, repeat: -1 });
+
             bubble.setInteractive();
             bubble.on('pointerdown', () => { this.burstBubble(bubble); });
         }
@@ -47,10 +70,13 @@ class MainScene extends Phaser.Scene {
     }
 
     update() {
-        if (this.score === 5) {
-            this.scene.start('GameOverScene');
-        }
+        // if (this.score === 5) {
+        //     this.scene.start('GameOverScene');
+        // }
+        this.updateTimer();
     }
+
+
 
     burstBubble(bubble) {
         console.log(bubble); // Log the bubble object to debug
@@ -58,6 +84,22 @@ class MainScene extends Phaser.Scene {
         bubble.setVisible(false); // Hide the bubble
         this.score += 1;
         this.scoreText.setText('Score: ' + this.score);
+    }
+
+    updateTimer() {
+        const elapsed = this.timerEvent.getElapsed();
+        const remaining = this.timer - elapsed;
+        const angle = (remaining / this.timer) * 360;
+
+        this.graphics.clear();
+        this.graphics.beginPath();
+        this.graphics.arc(50, 50, 50, Phaser.Math.DegToRad(0), Phaser.Math.DegToRad(angle), false);
+        this.graphics.strokePath();
+    }
+
+    onTimerEnd() {
+        this.scene.stop('MainScene');
+        this.scene.start('GameOverScene');
     }
 }
 
