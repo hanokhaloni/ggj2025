@@ -12,11 +12,13 @@ class MainScene extends Phaser.Scene {
 
   preload() {
     this.load.image("bubble", "bubble.png");
+    this.load.image("shark", "fin.png");
+    this.load.audio('bubbleMainMusic', 'bubbleoids music.wav');
   }
 
   create() {
-
-
+    this.sound.play('bubbleMainMusic', { loop: true });
+    
     const baseShader = new Phaser.Display.BaseShader(
       "BufferShader2",
       fragmentShader2
@@ -38,6 +40,32 @@ class MainScene extends Phaser.Scene {
       var color = Phaser.Utils.Array.GetRandom(colors);
 
       this.createBubble(x, y, color);
+    }
+
+    for (let i = 0; i < 5; i++) {
+      const shark = this.add.image(550, 750, 'shark');
+      shark.setScale(0.5);
+
+      this.tweens.add({
+      targets: shark,
+      x: -100,
+      ease: 'Sine.easeInOut',
+      duration: Phaser.Math.Between(5000,7000),
+      yoyo: true,
+      repeat: -1,
+      flipX: true,
+      delay: Phaser.Math.Between(400,800) * i
+      });
+
+      this.tweens.add({
+      targets: shark,
+      y: 800,
+      ease: 'Sine.easeInOut',
+      duration: 1500,
+      yoyo: true,
+      repeat: -1,
+      delay: Phaser.Math.Between(400,800) * i
+      });
     }
 
     this.score = 0;
@@ -92,6 +120,7 @@ class MainScene extends Phaser.Scene {
 
     // Add upward velocity to the bubble
     bubble.setVelocityY(-20);
+
   }
 
   update() {
@@ -151,6 +180,8 @@ class MainScene extends Phaser.Scene {
       setTopScore(this.score);
     }
     this.scene.stop("MainScene");
+    let backgroundMusic = this.sound.get('bubbleMainMusic');
+    backgroundMusic.stop();
     this.scene.start("GameOverScene");
   }
 }

@@ -70,7 +70,7 @@ void main() {
     //             clamp((f*f)*4.0,0.0,1.0));
 
     color = mix(vec3(1,1,1),
-                vec3(0,0,0.164706),
+                vec3(0.1,0.1,0.164706),
                 clamp(length(q),0.0,1.0));
 
     // color = mix(color,

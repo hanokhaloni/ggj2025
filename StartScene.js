@@ -14,7 +14,6 @@ class StartScene extends Phaser.Scene {
   }
 
   create() {
-    //TODO play sound
     this.sound.play('bubbleSound', { loop: true });
     const backgroundMusic = this.sound.get('bubbleSound');
 
