@@ -4,7 +4,7 @@ import { topScore, setTopScore, colors } from './main.js';
 class MainScene extends Phaser.Scene {
   constructor() {
     super({ key: "MainScene" });
-    this.timer = 5000;
+    this.timer = 15000;
     this.timerEvent = null;
     this.graphics = null;
     

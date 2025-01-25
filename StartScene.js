@@ -28,7 +28,13 @@ class StartScene extends Phaser.Scene {
 
 
     //add entrance animation of 6 bubbles, each by VideoColorSpace, with a name, asame as pacman ghosts in pacman game
-    const bubbleNames = ["Blinky", "Pinky", "Inky", "Clyde", "Sue", "Funky"];
+    const bubbleNames = [
+      "Blinky...1 point", 
+      "Pinky....is green", 
+      "Inky.....0 points", 
+      "Clyde....0 points", 
+      "Sue......0 points", 
+      "Funky....is funky!"];
 
     bubbleNames.forEach((name, index) => {
       const bubble = this.add.image(900, 150 + index * 80, 'bubble');
@@ -40,7 +46,7 @@ class StartScene extends Phaser.Scene {
       
       this.tweens.add({
       targets: bubbleText,
-      x: 180,
+      x: 150,
       ease: 'Sine.easeInOut',
       duration: 2000,
       delay: index * 200
@@ -48,7 +54,7 @@ class StartScene extends Phaser.Scene {
 
       this.tweens.add({
       targets: bubble,
-      x: 130,
+      x: 110,
       ease: 'Sine.easeInOut',
       duration: 2000,
       delay: index * 200
