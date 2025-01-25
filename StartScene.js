@@ -9,19 +9,17 @@ class StartScene extends Phaser.Scene {
   preload() {
     this.load.image("startButton", "startButton.png");
     this.load.image("bubble", "bubble.png");
+    this.load.image("shark", "fin.png");
+    this.load.audio('bubbleSound', 'bubbleoids pad loop.wav');
   }
 
   create() {
+    //TODO play sound
+    this.sound.play('bubbleSound', { loop: true });
+
     const baseShader = new Phaser.Display.BaseShader('BufferShader1', fragmentShader1);
     const shader = this.add.shader(baseShader, window.innerWidth / 2, window.innerHeight / 2, window.innerWidth, window.innerHeight);
 
-    const buttonRect = this.add.rectangle(225, 715, 350, 50, 0x0000ff, 0.5).setInteractive();
-    buttonRect.on('pointerdown', () => {
-      console.log('clicked');
-      
-      this.scene.start("MainScene");
-    });
-    const buttonText = this.add.text(100, 700, "Click to Start", { fontSize: "32px", fill: "#fff"  })
 
     const topTitleText = this.add.text(100, 55, "BUBBLESORT", { fontSize: "50px", fill: "#fff"  })
 
@@ -43,7 +41,9 @@ class StartScene extends Phaser.Scene {
       
       const bubbleText = this.add.text(bubble.x + 130, bubble.y-11, name, 
       { fontSize: "25px", fill: `#${Phaser.Display.Color.ValueToColor(colors[index]).color.toString(16).padStart(6, '0')}` });//.setOrigin(0, 0.5);
-      
+      bubbleText.setStroke('#070707', 4);
+      bubbleText.setShadow(1, 1, '#020202', 1, true, false);
+
       this.tweens.add({
       targets: bubbleText,
       x: 150,
@@ -60,6 +60,41 @@ class StartScene extends Phaser.Scene {
       delay: index * 200
       });
     });
+
+    //add a shark at the buttom going back and forth like a shark using the fin image
+    const shark = this.add.image(550, 750, 'shark');
+    shark.setScale(0.5);
+
+    this.tweens.add({
+      targets: shark,
+      x: -100,
+      ease: 'Sine.easeInOut',
+      duration: 7000,
+      yoyo: false,
+      repeat: -1,
+      delay: 2400
+    });
+
+    this.tweens.add({
+      targets: shark,
+      y: 800,
+      ease: 'Sine.easeInOut',
+      duration: 2200,
+      yoyo: true,
+      repeat: -1,
+      delay: 2400
+    });
+
+
+    const buttonRect = this.add.rectangle(225, 715, 350, 50, 0x0000ff, 0.5).setInteractive();
+    buttonRect.on('pointerdown', () => {
+      console.log('clicked');
+      
+      this.scene.start("MainScene");
+    });
+    const buttonText = this.add.text(100, 700, "Click to Start", { fontSize: "32px", fill: "#fff"  });
+
+
 
     // this.add
     // .text(500, 32, "Click the bubbles to destroy them", { fontSize: "24px", color: "#00ff00",  font: '"Press Start 2P"'  })
