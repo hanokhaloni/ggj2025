@@ -1,4 +1,3 @@
-
 const fragmentShader1 = `
 #ifdef GL_ES
 precision mediump float;
@@ -263,9 +262,10 @@ class StartScene extends Phaser.Scene {
 class MainScene extends Phaser.Scene {
   constructor() {
     super({ key: "MainScene" });
-    this.timer = 5000; // 10 seconds
+    this.timer = 50000;
     this.timerEvent = null;
     this.graphics = null;
+    this.colors = [0xff0000, 0x00ff00, 0x0000fff, 0xffff00, 0xff00ff, 0x00ffff];
   }
 
   preload() {
@@ -276,9 +276,12 @@ class MainScene extends Phaser.Scene {
     this.add
       .text(400, 32, "Click the bubbles to destroy them", { color: "#00ff00" })
       .setOrigin(0.5, 0);
-    
-      const baseShader = new Phaser.Display.BaseShader('BufferShader2', fragmentShader2);
-      const shader = this.add.shader(baseShader, 400, 300, 800, 600);
+
+    const baseShader = new Phaser.Display.BaseShader(
+      "BufferShader2",
+      fragmentShader2
+    );
+    const shader = this.add.shader(baseShader, 400, 300, 800, 600);
 
     this.graphics = this.add.graphics({
       lineStyle: { width: 4, color: 0xffffff },
@@ -289,34 +292,16 @@ class MainScene extends Phaser.Scene {
       callbackScope: this,
     });
 
-    var colors = [
-      0xff0000, 0x00ff00, 0x0000fff, 0xffff00, 0xff00ff, 0x00ffff,
-    ];
+
 
     for (let i = 0; i < 15; i++) {
       var x = Phaser.Math.Between(50, 750);
       var y = Phaser.Math.Between(100, 550);
+      var color = Phaser.Utils.Array.GetRandom(this.colors);
 
-      const bubble = this.physics.add
-        .image(x, y, "bubble")
-        .setScale(Phaser.Math.FloatBetween(0.05, 0.15));
+      this.createBubble(x, y, color);
+       
 
-      bubble.setTint(Phaser.Utils.Array.GetRandom(colors));
-
-      this.tweens.add({
-        targets: bubble,
-        x: bubble.x + Phaser.Math.Between(-150, 150),
-        y: bubble.y + Phaser.Math.Between(-150, 150),
-        duration: Phaser.Math.Between(500, 4000),
-        yoyo: true,
-        repeat: -1,
-        ease: "linear",
-      });
-
-      bubble.setInteractive();
-      bubble.on("pointerdown", () => {
-        this.burstBubble(bubble);
-      });
     }
 
     this.score = 0;
@@ -325,6 +310,50 @@ class MainScene extends Phaser.Scene {
       fill: "#fff",
     });
   }
+
+    createBubble(x, y, color) {
+        const bubble = this.physics.add
+            .image(x, y, "bubble")
+            .setScale(0.01)
+            .setBounce(1, 1) // Set bounce to make bubbles bump on collision
+            .setCollideWorldBounds(true); // Ensure bubbles collide with world bounds
+
+        this.tweens.add({
+            targets: bubble,
+            scale: Phaser.Math.FloatBetween(0.05,0.15),
+            duration: 2000,
+            ease: "Sine.easeOut",
+            yoyo: false,
+            repeat: 0,
+            delay: 0,
+            onUpdate: () => {
+                this.physics.world.collide(bubble, this.bubbleGroup);
+            }
+        });
+
+        bubble.setTint(color);
+        bubble.setInteractive({ draggable: true });
+
+        this.input.on('drag', (pointer, gameObject, dragX, dragY) => {
+            dragY = Phaser.Math.Clamp(dragY, 50, 750);
+            dragX = Phaser.Math.Clamp(dragX, 50, 750);
+            gameObject.y = dragY;
+            gameObject.x = dragX;
+        });
+
+        bubble.on('dragend', () => {
+            if (bubble.y > 550 && bubble.tint === this.colors[0]) {
+                for (let i = 0; i < this.score; i++) {
+                    var x = Phaser.Math.Between(50, 750);
+                    var y = Phaser.Math.Between(100, 550);
+                    var color = this.colors[0];
+                    this.createBubble(x, y, color);
+                } 
+                this.burstBubble(bubble);
+            }
+        });
+
+    }
 
   update() {
     this.updateTimer();
@@ -358,7 +387,7 @@ class MainScene extends Phaser.Scene {
 
     this.score += 1;
     this.scoreText.setText(this.score);
-  }
+      }
 
   updateTimer() {
     const elapsed = this.timerEvent.getElapsed();
