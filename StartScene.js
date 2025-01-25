@@ -1,4 +1,5 @@
 import fragmentShader1 from './fragmentShader1.js';
+import LunarLanderScene from './landerminigame/LunarLanderScene.js';
 import {colors} from './main.js';
 
 class StartScene extends Phaser.Scene {
@@ -93,7 +94,12 @@ class StartScene extends Phaser.Scene {
     });
     const buttonText = this.add.text(100, 700, "Click to Start", { fontSize: "32px", fill: "#fff"  });
 
-
+    //add a rectangle that is interactive, and when clicked, starts the LunarLanderScene
+    const landerButton = this.add.rectangle(225, 550, 350, 50, 0x0000ff, 0.0).setInteractive();
+    landerButton.on('pointerdown', () => {
+      console.log('clicked');
+      this.scene.start("LunarLanderScene");
+    });
 
     // this.add
     // .text(500, 32, "Click the bubbles to destroy them", { fontSize: "24px", color: "#00ff00",  font: '"Press Start 2P"'  })

@@ -30,13 +30,13 @@ class GameOverScene extends Phaser.Scene {
     });
 
     const shark = this.add.image(600, 200, 'shark2');
-      shark.setScale(0.7);
+      shark.setScale(0.8);
 
       this.tweens.add({
       targets: shark,
       x: 300,
-      ease: 'Sine.easeInOut',
-      duration: 599,
+      ease: 'Sine.easeIn',
+      duration: 250,
       yoyo: false,
       repeat: 0,
       });
@@ -47,26 +47,26 @@ class GameOverScene extends Phaser.Scene {
       ease: 'Sine.easeInOut',
       duration: 30,
       yoyo: true,
-      repeat: 5,
-      delay: Phaser.Math.Between(400,800)
+      repeat: 15,
+      delay: 250
       });
     
 
-    this.add.text(30, 400, "You are so amazing🦄", { fontSize: "32px", fill: "#000" })
+    this.add.text(50, 400, "You are so amazing🦄", { fontSize: "32px", fill: "#000" })
       .setStroke('#ff0000', 4)
       .setShadow(1, 1, '#550000', 1, true, false);
 
 
-    this.add.text(40, 500, "You won!", { fontSize: "64px", fill: "#000" })
+    this.add.text(80, 460, "You won!", { fontSize: "64px", fill: "#000" })
     .setStroke('#00ff00', 4)
     .setShadow(1, 1, '#005500', 1, true, false);
-    this.add.text(50, 600, "Your score is: " + this.scene.get("MainScene").score, {
+    this.add.text(70, 600, "Your score is: " + this.scene.get("MainScene").score, {
       fontSize: "32px",
       fill: "#000",
     }).setStroke('#0000ff', 4)
     .setShadow(1, 1, '#000055', 1, true, false);
 
-    this.add.text(50, 650, "Top score: " + topScore, {
+    this.add.text(100, 650, "Top score: " + topScore, {
       fontSize: "32px",
       fill: "#000",
     }) .setStroke('#ffff00', 4)

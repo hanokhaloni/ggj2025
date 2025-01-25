@@ -7,8 +7,8 @@ class LunarLanderScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("lander", "bubble.png");
-    this.load.atlas("flares", "flares.png", "flares.json");
+    this.load.image("lander", "./landerminigame/bubble.png");
+    this.load.atlas("flares", "./landerminigame/flares.png", "./landerminigame/flares.json");
 
   }
 

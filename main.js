@@ -1,6 +1,7 @@
 import StartScene from './StartScene.js';
 import MainScene from './MainScene.js';
 import GameOverScene from './GameOverScene.js';
+import LunarLanderScene from './landerminigame/LunarLanderScene.js';
 
 var topScore = 0;
 let colors = [0xff0000, 0x00ff00, 0x4169e1, 0xffff00, 0xff00ff, 0x00ffff];
@@ -14,7 +15,7 @@ const config = {
       debug: false,
     },
   },
-  scene: [StartScene, MainScene, GameOverScene],
+  scene: [StartScene, MainScene, GameOverScene, LunarLanderScene],
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
