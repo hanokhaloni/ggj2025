@@ -6,9 +6,21 @@ class LunarLanderScene extends Phaser.Scene {
 
   preload() {
     this.load.image('lander', 'bubble.png');
+    this.load.atlas('flares', 'flares.png', 'flares.json');
   }
 
   create() {
+
+    this.emitter = this.add.particles(400, 250, 'flares', {
+      frame: [ 'red', 'yellow', 'green' ],
+      lifespan: 4000,
+      speed: { min: 150, max: 250 },
+      scale: { start: 0.8, end: 0 },
+      gravityY: 150,
+      blendMode: 'ADD',
+      emitting: false
+    });
+
     this.lander = this.physics.add.sprite(400, 100, 'lander').setScale(0.05);
     this.lander.setAngle(-90);
     this.lander.setCollideWorldBounds(true);
@@ -39,10 +51,12 @@ class LunarLanderScene extends Phaser.Scene {
   }
 
   update() {
+    this.emitter.setPosition(this.lander.x, this.lander.y);
     if (this.cursors.up.isDown) {
       this.physics.velocityFromRotation(this.lander.rotation, 1000, this.lander.body.acceleration);
-      //TODO add particle effect
 
+      this.emitter.explode(3);
+      
     } else {
       this.lander.setAcceleration(0);
     }
