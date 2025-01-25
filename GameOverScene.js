@@ -1,3 +1,5 @@
+import fragmentShader3 from './fragmentShader3.js';
+import { topScore } from './main.js';
 
 class GameOverScene extends Phaser.Scene {
   constructor() {

@@ -1,4 +1,5 @@
 
+const fragmentShader3 = `
 #ifdef GL_ES
 precision mediump float;
 #endif
@@ -64,3 +65,6 @@ void main(void)
     mainImage(gl_FragColor, fragCoord.xy);
     gl_FragColor.a = 1.0;
 }
+`;
+
+export default fragmentShader3;

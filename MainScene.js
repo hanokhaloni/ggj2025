@@ -1,3 +1,5 @@
+import fragmentShader2 from './fragmentShader2.js';
+import { topScore, setTopScore } from './main.js';
 
 class MainScene extends Phaser.Scene {
   constructor() {
@@ -147,7 +149,7 @@ class MainScene extends Phaser.Scene {
 
   onTimerEnd() {
     if (this.score > topScore) {
-      topScore = this.score;
+      setTopScore(this.score);
     }
     this.scene.stop("MainScene");
     this.scene.start("GameOverScene");

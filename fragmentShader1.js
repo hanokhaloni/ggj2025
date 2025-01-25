@@ -1,4 +1,5 @@
 
+const fragmentShader1 = `
 #ifdef GL_ES
 precision mediump float;
 #endif
@@ -64,17 +65,20 @@ void main() {
 
     float f = fbm(st+r);
 
-    // color = mix(vec3(0.101961,0.333333,0.444444),
-    //             vec3(0.222222,0.33333,0.498039),
-    //             clamp((f*f)*4.0,0.0,1.0));
+    color = mix(vec3(0.101961,0.333333,0.444444),
+                 vec3(0.222222,0.33333,0.498039),
+                 clamp((f*f)*4.0,0.0,1.0));
 
-    color = mix(vec3(1,1,1),
+    color = mix(color,
                 vec3(0,0,0.164706),
                 clamp(length(q),0.0,1.0));
 
-    // color = mix(color,
-    //             vec3(0.666667,1,1),
-    //             clamp(length(r.x),0.0,1.0));
+     color = mix(color,
+                 vec3(0.666667,1,1),
+                 clamp(length(r.x),0.0,1.0));
 
     gl_FragColor = vec4((f*f*f+.6*f*f+.5*f)*color,1.0);
 }
+`;
+
+export default fragmentShader1;

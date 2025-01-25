@@ -1,9 +1,8 @@
-import fragmentShader1 from './fragmentShader1.glsl';
-import fragmentShader2 from './fragmentShader2.glsl';
-import fragmentShader3 from './fragmentShader3.glsl';
 import StartScene from './StartScene.js';
 import MainScene from './MainScene.js';
 import GameOverScene from './GameOverScene.js';
+
+var topScore = 0;
 
 const config = {
   type: Phaser.AUTO,
@@ -19,3 +18,9 @@ const config = {
 };
 
 const game = new Phaser.Game(config);
+
+function setTopScore(score) {
+  topScore = score;
+}
+
+export { topScore, setTopScore };

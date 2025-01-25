@@ -1,3 +1,4 @@
+import fragmentShader1 from './fragmentShader1.js';
 
 class StartScene extends Phaser.Scene {
   constructor() {
