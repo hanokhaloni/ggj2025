@@ -15,14 +15,17 @@ class StartScene extends Phaser.Scene {
     const baseShader = new Phaser.Display.BaseShader('BufferShader1', fragmentShader1);
     const shader = this.add.shader(baseShader, window.innerWidth / 2, window.innerHeight / 2, window.innerWidth, window.innerHeight);
 
-    const buttonGraphics = this.add.graphics();
-    buttonGraphics.fillStyle(0x0000ff, 0.5);
-    buttonGraphics.fillRect(50, 50, 100, 50);
+    const buttonRect = this.add.rectangle(225, 715, 350, 50, 0x0000ff, 0.5).setInteractive();
+    buttonRect.on('pointerdown', () => {
+      console.log('clicked');
+      
+      this.scene.start("MainScene");
+    });
+    const buttonText = this.add.text(100, 700, "Click to Start", { fontSize: "32px", fill: "#fff"  })
 
-    const buttonText = this.add.text(100, 75, "Start", { fontSize: "32px", fill: "#fff"  })
+    const topTitleText = this.add.text(100, 55, "BUBBLESORT", { fontSize: "50px", fill: "#fff"  })
 
-    .setOrigin(0.5)
-    .setInteractive();
+
 
     //add entrance animation of 6 bubbles, each by VideoColorSpace, with a name, asame as pacman ghosts in pacman game
     const bubbleNames = ["Blinky", "Pinky", "Inky", "Clyde", "Sue", "Funky"];
@@ -58,9 +61,7 @@ class StartScene extends Phaser.Scene {
 
     // this.add.text(window.innerWidth / 2, window.innerHeight / 2, 'Start Game', { fontSize: '32px', fill: '#fff' }).setOrigin(0.5);
 
-    buttonText.on('pointerdown', () => {
-      this.scene.start("MainScene");
-    });
+
   }
 }
 

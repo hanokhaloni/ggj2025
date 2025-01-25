@@ -15,9 +15,7 @@ class MainScene extends Phaser.Scene {
   }
 
   create() {
-    this.add
-      .text(400, 32, "Click the bubbles to destroy them", { color: "#00ff00" })
-      .setOrigin(0.5, 0);
+
 
     const baseShader = new Phaser.Display.BaseShader(
       "BufferShader2",
