@@ -440,9 +440,9 @@ class GameOverScene extends Phaser.Scene {
       loop: true
     });
 
-    this.add.text(15, 200, "Guess what?", { fontSize: "64px", fill: "#000" });
+    this.add.text(150, 200, "Guess what?", { fontSize: "32px", fill: "#000" });
 
-    this.add.text(100, 300, "Everyone wins!", { fontSize: "64px", fill: "#000" });
+    this.add.text(200, 300, "Everybody wins!", { fontSize: "64px", fill: "#000" });
     this.add.text(200, 400, "But your score is: " + this.scene.get("MainScene").score, {
       fontSize: "32px",
       fill: "#000",
@@ -463,7 +463,7 @@ class GameOverScene extends Phaser.Scene {
     });
 
     //create
-    const shareButton = this.add.text(400, 500, "Share to Facebook", { fontSize: "32px", fill: "#000" })
+    const shareButton = this.add.text(450, 550, "Share to Facebook", { fontSize: "32px", fill: "#000" })
         .setOrigin(0.5)
         .setInteractive();
 
