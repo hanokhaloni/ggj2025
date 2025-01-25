@@ -60,10 +60,10 @@ class LunarLanderScene extends Phaser.Scene {
     );
 
     //add text for speed of lander
-    this.speedText = this.add.text(10, 10, "", {
+    this.speedText = this.add.text(90, 10, "", {
       fontSize: "32px",
       fill: "#00ff00",
-    });
+    }).setStroke('#070707', 4).setShadow(1, 1, '#020202', 1, true, false);
   }
 
   update() {
@@ -104,16 +104,16 @@ class LunarLanderScene extends Phaser.Scene {
       lander.body.velocity.x < -10.0
     ) {
       this.add
-        .text(200, 300, "You crashed!!", { fontSize: "32px", fill: "#ff0000" })
+        .text(200, 300, "You crashed!!", { fontSize: "32px", fill: "#ff0000" }).setStroke('#070707', 4).setShadow(1, 1, '#020202', 1, true, false)
         .setOrigin(0.5);
       this.hasCrashed = true;
     } else {
       // Check if landed on flat surface
       //  if (lander.body.touching.down && (lander.x > 200 && lander.x < 300 || lander.x > 500 && lander.x < 600)) {
       if (this.hasCrashed != true) {
-        this.add
-          .text(200, 300, "You Landed!", { fontSize: "32px", fill: "#00ff00" })
-          .setOrigin(0.5);
+        
+        this.add.text(200, 300, "You crashed!", { fontSize: "32px", fill: "#ff0000" }).setOrigin(0.5).setStroke('#070707', 4).setShadow(1, 1, '#020202', 1, true, false);;
+        //this.add.text(200, 300, "You Landed!", { fontSize: "32px", fill: "#00ff00" }).setOrigin(0.5);
       }
       //} else {
       //this.scene.restart();
