@@ -3,7 +3,7 @@ import MainScene from './MainScene.js';
 import GameOverScene from './GameOverScene.js';
 
 var topScore = 0;
-let colors = [0xff0000, 0x00ff00, 0x0000fff, 0xffff00, 0xff00ff, 0x00ffff];
+let colors = [0xff0000, 0x00ff00, 0x4169e1, 0xffff00, 0xff00ff, 0x00ffff];
 const config = {
   type: Phaser.AUTO,
   width: 480,//window.innerWidth,
