@@ -23,7 +23,7 @@ class MainScene extends Phaser.Scene {
       "BufferShader2",
       fragmentShader2
     );
-    const shader = this.add.shader(baseShader, 400, 300, 800, 600);
+    const shader = this.add.shader(baseShader, window.innerWidth / 2, window.innerHeight / 2, window.innerWidth, window.innerHeight);
 
     this.graphics = this.add.graphics({
       lineStyle: { width: 4, color: 0xffffff },
@@ -35,8 +35,8 @@ class MainScene extends Phaser.Scene {
     });
 
     for (let i = 0; i < 15; i++) {
-      var x = Phaser.Math.Between(50, 750);
-      var y = Phaser.Math.Between(100, 550);
+      var x = Phaser.Math.Between(50, 480 -50);
+      var y = Phaser.Math.Between(100, 800 - 50);
       var color = Phaser.Utils.Array.GetRandom(colors);
 
       this.createBubble(x, y, color);
@@ -74,7 +74,7 @@ class MainScene extends Phaser.Scene {
 
     this.input.on("drag", (pointer, gameObject, dragX, dragY) => {
       dragY = Phaser.Math.Clamp(dragY, 50, 750);
-      dragX = Phaser.Math.Clamp(dragX, 50, 750);
+      dragX = Phaser.Math.Clamp(dragX, 50, 450);
       gameObject.y = dragY;
       gameObject.x = dragX;
     });
@@ -82,8 +82,9 @@ class MainScene extends Phaser.Scene {
     bubble.on("dragend", () => {
       if (bubble.y > 550 && bubble.tint === colors[0]) {
         for (let i = 0; i < this.score; i++) {
-          var x = Phaser.Math.Between(50, 750);
-          var y = Phaser.Math.Between(100, 550);
+          var x = Phaser.Math.Between(50, 480 -50);
+          var y = Phaser.Math.Between(100, 800 - 50);
+    
           var color = colors[0];
           this.createBubble(x, y, color);
         }

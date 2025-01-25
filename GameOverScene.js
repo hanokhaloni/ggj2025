@@ -8,9 +8,8 @@ class GameOverScene extends Phaser.Scene {
 
   create() {
     const baseShader = new Phaser.Display.BaseShader('BufferShader1', fragmentShader3);
-    const shader = this.add.shader(baseShader, 400, 300, 800, 600);
+    const shader = this.add.shader(baseShader, window.innerWidth / 2, window.innerHeight / 2, window.innerWidth, window.innerHeight);
 
-    //const buttonGraphics = this.add.graphics();
     this.time.addEvent({
       delay: 500,
       callback: () => {
@@ -22,15 +21,15 @@ class GameOverScene extends Phaser.Scene {
       loop: true
     });
 
-    this.add.text(150, 200, "Guess what?", { fontSize: "32px", fill: "#000" });
+    this.add.text(30, 200, "Guess what?", { fontSize: "32px", fill: "#000" });
 
-    this.add.text(200, 300, "Everybody wins!", { fontSize: "64px", fill: "#000" });
-    this.add.text(200, 400, "But your score is: " + this.scene.get("MainScene").score, {
+    this.add.text(40, 300, "Everybody wins!", { fontSize: "64px", fill: "#000" });
+    this.add.text(50, 400, "But your score is: " + this.scene.get("MainScene").score, {
       fontSize: "32px",
       fill: "#000",
     });
 
-    this.add.text(250, 450, "Top score: " + topScore, {
+    this.add.text(50, 450, "Top score: " + topScore, {
       fontSize: "32px",
       fill: "#000",
     });
@@ -45,7 +44,7 @@ class GameOverScene extends Phaser.Scene {
     });
 
     //create
-    const shareButton = this.add.text(450, 550, "Share to Facebook", { fontSize: "32px", fill: "#000" })
+    const shareButton = this.add.text(150, 550, "Share to Facebook", { fontSize: "32px", fill: "#000" })
         .setOrigin(0.5)
         .setInteractive();
 
@@ -63,6 +62,7 @@ class GameOverScene extends Phaser.Scene {
         this.scene.start("StartScene");
       });
     });
+
   }
 }
 
