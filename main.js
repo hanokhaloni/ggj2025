@@ -230,7 +230,7 @@ void main(void)
 }
 `;
 
-
+let topScore = 0;
 
 class StartScene extends Phaser.Scene {
   constructor() {
@@ -411,6 +411,9 @@ class MainScene extends Phaser.Scene {
   }
 
   onTimerEnd() {
+    if (this.score > topScore) {
+      topScore = this.score;
+    }
     this.scene.stop("MainScene");
     this.scene.start("GameOverScene");
   }
@@ -444,6 +447,12 @@ class GameOverScene extends Phaser.Scene {
       fontSize: "32px",
       fill: "#000",
     });
+
+    this.add.text(250, 450, "Top score: " + topScore, {
+      fontSize: "32px",
+      fill: "#000",
+    });
+
     this.tweens.add({
         targets: this.children.list.filter(child => child.type === 'Text'),
         y: '+=10',
