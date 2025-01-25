@@ -1,5 +1,5 @@
 import fragmentShader2 from './fragmentShader2.js';
-import { topScore, setTopScore } from './main.js';
+import { topScore, setTopScore, colors } from './main.js';
 
 class MainScene extends Phaser.Scene {
   constructor() {
@@ -7,7 +7,7 @@ class MainScene extends Phaser.Scene {
     this.timer = 5000;
     this.timerEvent = null;
     this.graphics = null;
-    this.colors = [0xff0000, 0x00ff00, 0x0000fff, 0xffff00, 0xff00ff, 0x00ffff];
+    
   }
 
   preload() {
@@ -37,7 +37,7 @@ class MainScene extends Phaser.Scene {
     for (let i = 0; i < 15; i++) {
       var x = Phaser.Math.Between(50, 750);
       var y = Phaser.Math.Between(100, 550);
-      var color = Phaser.Utils.Array.GetRandom(this.colors);
+      var color = Phaser.Utils.Array.GetRandom(colors);
 
       this.createBubble(x, y, color);
     }
@@ -80,11 +80,11 @@ class MainScene extends Phaser.Scene {
     });
 
     bubble.on("dragend", () => {
-      if (bubble.y > 550 && bubble.tint === this.colors[0]) {
+      if (bubble.y > 550 && bubble.tint === colors[0]) {
         for (let i = 0; i < this.score; i++) {
           var x = Phaser.Math.Between(50, 750);
           var y = Phaser.Math.Between(100, 550);
-          var color = this.colors[0];
+          var color = colors[0];
           this.createBubble(x, y, color);
         }
         this.burstBubble(bubble);
