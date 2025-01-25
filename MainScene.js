@@ -34,10 +34,16 @@ class MainScene extends Phaser.Scene {
       callbackScope: this,
     });
 
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 20; i++) {
       var x = Phaser.Math.Between(50, 480 -50);
-      var y = Phaser.Math.Between(100, 800 - 50);
-      var color = Phaser.Utils.Array.GetRandom(colors);
+      var y = Phaser.Math.Between(300, 800 - 50);
+      var color;
+      if (i<2) {
+        color = colors[0];
+      }
+      else {
+        color = colors[Phaser.Math.Between(1, 5)];
+      }     
 
       this.createBubble(x, y, color);
     }
@@ -180,8 +186,10 @@ class MainScene extends Phaser.Scene {
       setTopScore(this.score);
     }
     this.scene.stop("MainScene");
-    let backgroundMusic = this.sound.get('bubbleMainMusic');
-    backgroundMusic.stop();
+    let bgmplay = this.sound.get('bubbleMainMusic');
+    bgmplay.stop();
+    bgmplay.destroy();
+
     this.scene.start("GameOverScene");
   }
 }
