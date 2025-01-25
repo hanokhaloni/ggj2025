@@ -262,7 +262,7 @@ class StartScene extends Phaser.Scene {
 class MainScene extends Phaser.Scene {
   constructor() {
     super({ key: "MainScene" });
-    this.timer = 50000;
+    this.timer = 5000;
     this.timerEvent = null;
     this.graphics = null;
     this.colors = [0xff0000, 0x00ff00, 0x0000fff, 0xffff00, 0xff00ff, 0x00ffff];
@@ -353,6 +353,9 @@ class MainScene extends Phaser.Scene {
             }
         });
 
+        // Add upward velocity to the bubble
+        bubble.setVelocityY(-20);
+
     }
 
   update() {
@@ -435,11 +438,21 @@ class GameOverScene extends Phaser.Scene {
     });
 
     this.add.text(15, 200, "Guess what?", { fontSize: "64px", fill: "#000" });
+
     this.add.text(100, 300, "Everyone wins!", { fontSize: "64px", fill: "#000" });
     this.add.text(200, 400, "But your score is: " + this.scene.get("MainScene").score, {
       fontSize: "32px",
       fill: "#000",
     });
+    this.tweens.add({
+        targets: this.children.list.filter(child => child.type === 'Text'),
+        y: '+=10',
+        duration: 1000,
+        ease: 'Sine.easeInOut',
+        yoyo: true,
+        repeat: -1
+    });
+
     //create
     const shareButton = this.add.text(400, 500, "Share to Facebook", { fontSize: "32px", fill: "#000" })
         .setOrigin(0.5)
@@ -447,9 +460,11 @@ class GameOverScene extends Phaser.Scene {
 
     shareButton.on('pointerdown', () => {
         const url = "https://yourgameurl.com";
-        const imageUrl = this.game.renderer.snapshotCanvas.toDataURL();
-        const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&picture=${encodeURIComponent(imageUrl)}`;
-        window.open(facebookShareUrl, '_blank');
+        this.game.renderer.snapshot((image) => {
+            const imageUrl = image.src;
+            const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&picture=${encodeURIComponent(imageUrl)}`;
+            window.open(facebookShareUrl, '_blank');
+        });
     });
 
     this.time.delayedCall(500, () => {
