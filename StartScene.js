@@ -16,6 +16,7 @@ class StartScene extends Phaser.Scene {
   create() {
     //TODO play sound
     this.sound.play('bubbleSound', { loop: true });
+    const backgroundMusic = this.sound.get('bubbleSound');
 
     const baseShader = new Phaser.Display.BaseShader('BufferShader1', fragmentShader1);
     const shader = this.add.shader(baseShader, window.innerWidth / 2, window.innerHeight / 2, window.innerWidth, window.innerHeight);
@@ -89,7 +90,7 @@ class StartScene extends Phaser.Scene {
     const buttonRect = this.add.rectangle(225, 715, 350, 50, 0x0000ff, 0.5).setInteractive();
     buttonRect.on('pointerdown', () => {
       console.log('clicked');
-      
+      backgroundMusic.stop();
       this.scene.start("MainScene");
     });
     const buttonText = this.add.text(100, 700, "Click to Start", { fontSize: "32px", fill: "#fff"  });
