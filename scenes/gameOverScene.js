@@ -1,5 +1,5 @@
-import fragmentShader3 from './fragmentShader3.js';
-import { topScore } from './main.js';
+import fragmentShader3 from '../assets/shaders/effect-shader.js';
+import { topScore } from '../main.js';
 
 class GameOverScene extends Phaser.Scene {
   constructor() {
@@ -7,9 +7,8 @@ class GameOverScene extends Phaser.Scene {
   }
 
   preload() {
-
-    this.load.image("shark2", "shark.png");
-    this.load.audio('scream', 'cartoon-scream.mp3');
+    this.load.image("shark2", "assets/images/shark.png");
+    this.load.audio('scream', 'assets/sounds/cartoon-scream.mp3');
   }
 
   create() {

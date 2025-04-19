@@ -1,0 +1,15 @@
+{
+  "name": "bubble-burst-game",
+  "version": "1.0.0",
+  "description": "A fun bubble bursting game with shader effects",
+  "main": "main.js",
+  "scripts": {
+    "start": "http-server -c-1"
+  },
+  "dependencies": {
+    "phaser": "^3.85.0"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+} 

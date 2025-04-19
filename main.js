@@ -1,6 +1,6 @@
-import StartScene from './StartScene.js';
-import MainScene from './MainScene.js';
-import GameOverScene from './GameOverScene.js';
+import StartScene from './scenes/startScene.js';
+import MainScene from './scenes/mainScene.js';
+import GameOverScene from './scenes/gameOverScene.js';
 import LunarLanderScene from './landerminigame/LunarLanderScene.js';
 
 var topScore = 0;

@@ -1,5 +1,5 @@
-import fragmentShader2 from './fragmentShader2.js';
-import { topScore, setTopScore, colors } from './main.js';
+import fragmentShader2 from '../assets/shaders/ocean-shader.js';
+import { topScore, setTopScore, colors } from '../main.js';
 
 class MainScene extends Phaser.Scene {
   constructor() {
@@ -11,9 +11,9 @@ class MainScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("bubble", "bubble.png");
-    this.load.image("shark", "fin.png");
-    this.load.audio('bubbleMainMusic', 'bubbleoids music.wav');
+    this.load.image("bubble", "assets/images/bubble.png");
+    this.load.image("shark", "assets/images/fin.png");
+    this.load.audio('bubbleMainMusic', 'assets/sounds/bubbleoids-music.wav');
   }
 
   create() {

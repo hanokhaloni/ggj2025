@@ -1,6 +1,6 @@
-import fragmentShader1 from './fragmentShader1.js';
-import LunarLanderScene from './landerminigame/LunarLanderScene.js';
-import {colors} from './main.js';
+import fragmentShader1 from '../assets/shaders/bubble-shader.js';
+import LunarLanderScene from '../landerminigame/LunarLanderScene.js';
+import {colors} from '../main.js';
 
 class StartScene extends Phaser.Scene {
   constructor() {
@@ -8,10 +8,10 @@ class StartScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("startButton", "startButton.png");
-    this.load.image("bubble", "bubble.png");
-    this.load.image("shark", "fin.png");
-    this.load.audio('bubbleSound', 'bubbleoids pad loop.wav');
+    this.load.image("startButton", "assets/images/startButton.png");
+    this.load.image("bubble", "assets/images/bubble.png");
+    this.load.image("shark", "assets/images/fin.png");
+    this.load.audio('bubbleSound', 'assets/sounds/bubbleoids-pad-loop.wav');
   }
 
   create() {
